@@ -1,6 +1,7 @@
 "use strict";
 
 const Gun = require("../models/gun");
+const Player = require("../models/player");
 var crypto = require("crypto");
 const mongoose = require("mongoose");
 
@@ -32,7 +33,7 @@ function getGun(req, res) {
   function getGunByName(req, res) {
     let name = req.params.name;
   
-    Gun.find({ userName: name })
+    Gun.find({ gunName: name })
       .exec((err, gun) => {
         if (err)
           return res
@@ -83,6 +84,20 @@ function getGun(req, res) {
           .status(500)
           .send({ message: `Error al borrar arma: ${err}` });
       if (!gun) return res.status(404).send({ message: `El arma no existe` });
+
+      Player.find({}, (err, players) => {
+        if (!err && players) {
+          players.forEach(u => {
+            if(u.gun._id==gunId){
+              u.gun=null;
+              u.save((err, uSaved) => {
+                console.log(uSaved);
+              });
+            }
+          });
+        }
+      });
+
       gun.remove(err => {
         if (err)
           return res

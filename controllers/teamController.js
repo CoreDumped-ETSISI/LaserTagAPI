@@ -1,6 +1,7 @@
 "use strict";
 
 const Team = require("../models/team");
+const Game = require("../models/game");
 const Player = require("../models/player");
 const mongoose = require("mongoose");
 
@@ -78,6 +79,18 @@ function getTeam(req, res) {
           .status(500)
           .send({ message: `Error al borrar equipo: ${err}` });
       if (!team) return res.status(404).send({ message: `El equipo no existe` });
+      Game.find({}, (err, games) => {
+        if (!err && games) {
+          games.forEach(game => {
+            if(game.teams.indexOf(teamId)>-1){
+              game.teams.splice(game.teams.indexOf(teamId), 1);
+              game.save((err, gSaved) => {
+                console.log(gSaved);
+              });
+            }
+          });
+        }
+      });
       team.remove(err => {
         if (err)
           return res
