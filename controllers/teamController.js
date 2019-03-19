@@ -120,8 +120,8 @@ function getTeam(req, res) {
           if(team.members.indexOf(playerId)>-1){
             team.members.splice(team.members.indexOf(playerId), 1);
             team.save((err, tSaved) => {
-                console.log(tSaved);
-              });
+              //console.log(tSaved);
+            });
           }
           else return res.status(409).send({ message: 'El jugador no esta en el equipo' });
         }
@@ -129,7 +129,7 @@ function getTeam(req, res) {
           if(team.members.indexOf(playerId)<0){
             team.members.push(player);
             team.save((err, tSaved) => {
-              console.log(tSaved);
+              //console.log(tSaved);
             });
           }
           else return res.status(404).send({ message: 'El jugador ya esta en el equipo' });

@@ -89,7 +89,7 @@ function getGame(req, res) {
           if(game.teams.indexOf(teamId)>-1){
             game.teams.splice(game.teams.indexOf(teamId), 1);
             game.save((err, gSaved) => {
-              console.log(gSaved);
+              //console.log(gSaved);
             });
           }
           else return res.status(409).send({ message: 'El equipo no esta en la partida' });
@@ -98,7 +98,7 @@ function getGame(req, res) {
           if(game.teams.indexOf(teamId)<0){
             game.teams.push(team);
             game.save((err, gSaved) => {
-              console.log(gSaved);
+              //console.log(gSaved);
             });
           }
           else return res.status(404).send({ message: 'El equipo ya esta en la partida' });

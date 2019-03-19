@@ -1,6 +1,7 @@
 "use strict";
 
 const Player = require("../models/player");
+const Gun = require("../models/gun");
 const mongoose = require("mongoose");
 
 function getPlayer(req, res) {
@@ -86,8 +87,53 @@ function getPlayer(req, res) {
       });
     });
   }
-
   
+  function addGun(req, res){
+    let playerId = req.params.playerId;
+    let gunId = req.params.gunId;
+
+    return addRemove(playerId, gunId, false, res);
+  }
+
+  function removeGun(req, res){
+    let playerId = req.params.playerId;
+
+    Player.findById(playerId, (err, player) => {
+      if (err)
+        return res
+          .status(500)
+          .send({ message: `Error al realizar peticion: ${err}` });
+      if (!player) return res.status(404).send({ message: `El jugador no existe` });
+      player.gun = null;
+      player.save((err, pSaved) => {
+        //console.log(pSaved);
+      });
+      res.status(200).send({ player });
+    });
+  }
+
+  // removes when rem is true adds otherwise
+  function addRemove(playerId, gunId, rem, res){
+    Player.findById(playerId, (err, player) => {
+      if (err)
+        return res
+          .status(500)
+          .send({ message: `Error al realizar peticion: ${err}` });
+      if (!player) return res.status(404).send({ message: `El jugador no existe` });
+      Gun.findById(gunId, (err2, gun) => {
+        if (err2)
+          return res
+            .status(500)
+            .send({ message: `Error al realizar peticion: ${err2}` });
+        if (!gun) return res.status(404).send({ message: `El arma no existe` });
+        player.gun = gun;
+        player.save((err, pSaved) => {
+          //console.log(pSaved);
+        });
+        res.status(200).send({ player });
+      });
+    });
+  }
 
   module.exports = {
     getPlayer,
@@ -95,5 +141,7 @@ function getPlayer(req, res) {
     getPlayerByName,
     createPlayer,
     updatePlayer,
-    deletePlayer
+    deletePlayer,
+    addGun,
+    removeGun
   };

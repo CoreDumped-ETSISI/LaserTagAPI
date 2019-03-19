@@ -10,5 +10,7 @@ router.get('/:playerId', playerCtrl.getPlayer);
 router.get('/byName/:name', playerCtrl.getPlayerByName);
 router.put('/:playerId', playerCtrl.updatePlayer);
 router.delete('/:playerId', playerCtrl.deletePlayer);
+router.put('/:playerId/gun/:gunId/add', playerCtrl.addGun);
+router.put('/:playerId/remove', playerCtrl.removeGun);
 
 module.exports = router
