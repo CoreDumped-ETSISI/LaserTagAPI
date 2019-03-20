@@ -4,7 +4,6 @@ const express = require('express')
 const bodyParser = require('body-parser')
 
 const app = express()
-const api = require('./routes')
 const playerRoutes = require('./routes/playerRoutes')
 const gunRoutes = require('./routes/gunRoutes')
 const teamRoutes = require('./routes/teamRoutes')
@@ -24,6 +23,5 @@ app.use('/player', playerRoutes);
 app.use('/gun', gunRoutes);
 app.use('/team', teamRoutes);
 app.use('/game', gameRoutes);
-app.use('/api', api);
 
 module.exports = app
