@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const GameSchema = new Schema({
+    creationDate: { type: Date, default: Date.now()},
     teams: [
         {
             type: Schema.Types.ObjectId,
