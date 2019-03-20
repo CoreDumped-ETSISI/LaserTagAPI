@@ -88,10 +88,10 @@ function getGun(req, res) {
       Player.find({}, (err, players) => {
         if (!err && players) {
           players.forEach(u => {
-            if(u.gun._id==gunId){
+            if(u.gun==gunId){
               u.gun=null;
               u.save((err, uSaved) => {
-                console.log(uSaved);
+                //console.log(uSaved);
               });
             }
           });
