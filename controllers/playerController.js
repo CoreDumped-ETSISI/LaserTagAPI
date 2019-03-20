@@ -50,6 +50,7 @@ function getPlayer(req, res) {
     const player = new Player();
   
     player.userName = req.body.userName;
+    player.idPlayer = req.body.idPlayer;
   
     player.save((err, playerStored) => {
 		if(err) res.status(500).send({message: `Error al salvar la base de datos ${err}`})
@@ -143,27 +144,72 @@ function getPlayer(req, res) {
     });
   }
 
-  /*function addElement(playerId, gunId, res){
+  function playerShot(req, res){
+    let playerId = req.params.playerId;
+    let playerIdShot = req.params.playerIdShot;
+
+    Player.findById(playerId)
+      .populate("gun")
+      .exec((err, player) => {
+      if (err)
+        return res
+          .status(500)
+          .send({ message: `Error al realizar peticion: ${err}` });
+      if (!player) return res.status(404).send({ message: `El jugador no existe` });
+      
+      if(player.gun!=null){
+        Player.findById(playerIdShot, (err2, playerShot) => {
+          if (err2)
+            return res
+              .status(500)
+              .send({ message: `Error al realizar peticion: ${err2}` });
+          if (!playerShot) return res.status(404).send({ message: `El jugador no existe` });
+          player.successfulShots++;
+          console.log(playerShot.health-player.gun.damage);
+          console.log(player.gun.damage);
+          console.log(playerShot.health);
+          playerShot.health=playerShot.health-player.gun.damage;
+          console.log(playerShot.health);
+          if(playerShot.health<=0){
+            playerShot.deaths++;
+            player.kills++;
+          }
+          player.save((err3, pSaved) => {
+            console.log(pSaved);
+          });
+          playerShot.save((err4, pSSaved) => {
+            console.log(pSSaved);
+          });
+          res.status(200).send({ player });
+        });
+      }
+      else{
+        res.status(409).send({ message: `El jugador no tiene un arma asignada` });
+      }
+    });
+  }
+
+  function shootPlayer(req, res){
+    let playerId = req.params.playerId;
+
     Player.findById(playerId, (err, player) => {
       if (err)
         return res
           .status(500)
           .send({ message: `Error al realizar peticion: ${err}` });
       if (!player) return res.status(404).send({ message: `El jugador no existe` });
-      Gun.findById(gunId, (err2, gun) => {
-        if (err2)
-          return res
-            .status(500)
-            .send({ message: `Error al realizar peticion: ${err2}` });
-        if (!gun) return res.status(404).send({ message: `El arma no existe` });
-        player.gun = gun;
+      if(player.gun!=null){
+        player.shots++;
         player.save((err, pSaved) => {
           //console.log(pSaved);
         });
         res.status(200).send({ player });
-      });
+      }
+      else{
+        res.status(409).send({ message: `El jugador no tiene un arma asignada` });
+      }
     });
-  }*/
+  }
 
   module.exports = {
     getPlayer,
@@ -173,5 +219,7 @@ function getPlayer(req, res) {
     updatePlayer,
     deletePlayer,
     addGun,
-    removeGun
+    removeGun,
+    playerShot,
+    shootPlayer
   };

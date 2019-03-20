@@ -9,6 +9,9 @@ const PlayerSchema = new Schema({
   health: { type: Number, default: 0 },
   deaths: { type: Number, default: 0 },
   kills: { type: Number, default: 0 },
+  shots: { type: Number, default: 0 },
+  successfulShots: { type: Number, default: 0 },
+  idPlayer: { type: Number, required: true, unique:true, min:0, max:63},
   gun: {type: Schema.Types.ObjectId, ref: 'Gun', default: null }
 });
 
